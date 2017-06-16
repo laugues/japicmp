@@ -9,6 +9,7 @@ public interface JApiCompatibility {
 	/**
 	 * Returns true if this element has changed binary compatible.
 	 *
+	 *
 	 * @return true if this element has changed binary compatible
 	 */
 	boolean isBinaryCompatible();

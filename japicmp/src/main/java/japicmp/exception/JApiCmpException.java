@@ -14,7 +14,10 @@ public class JApiCmpException extends RuntimeException {
 		JaxbException,
 		ClassLoading,
 		IllegalState,
-		IllegalArgument, XsltError
+		IllegalArgument,
+		XsltError,
+		classException,
+		compatibilityChange
 	}
 
 	public JApiCmpException(Reason reason, String msg) {

@@ -16,6 +16,7 @@ public class JApiAnnotation implements JApiHasChangeStatus, JApiCompatibility {
 	private final Optional<Annotation> newAnnotation;
 	private final List<JApiAnnotationElement> elements = new LinkedList<>();
 	private JApiChangeStatus changeStatus;
+	private final List<JApiCompatibilityChange> compatibilityChanges = new LinkedList<>();
 
 	public JApiAnnotation(String fullyQualifiedName, Optional<Annotation> oldAnnotation, Optional<Annotation> newAnnotation, JApiChangeStatus changeStatus) {
 		this.fullyQualifiedName = fullyQualifiedName;
@@ -131,18 +132,30 @@ public class JApiAnnotation implements JApiHasChangeStatus, JApiCompatibility {
 	@Override
 	@XmlAttribute
 	public boolean isBinaryCompatible() {
-		return true;
+		boolean binaryCompatible = true;
+		for (JApiCompatibilityChange compatibilityChange : compatibilityChanges) {
+			if (!compatibilityChange.isBinaryCompatible()) {
+				binaryCompatible = false;
+			}
+		}
+		return binaryCompatible;
 	}
 
 	@Override
 	@XmlAttribute
 	public boolean isSourceCompatible() {
-		return true;
+		boolean binaryCompatible = true;
+		for (JApiCompatibilityChange compatibilityChange : compatibilityChanges) {
+			if (!compatibilityChange.isSourceCompatible()) {
+				binaryCompatible = false;
+			}
+		}
+		return binaryCompatible;
 	}
 
 	@XmlElementWrapper(name = "compatibilityChanges")
 	@XmlElement(name = "compatibilityChange")
 	public List<JApiCompatibilityChange> getCompatibilityChanges() {
-		return Collections.EMPTY_LIST;
+		return compatibilityChanges;
 	}
 }

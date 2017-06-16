@@ -19,9 +19,11 @@ public class JApiMethod extends JApiBehavior {
 		this.newMethod = newMethod;
 		this.returnType = computeReturnTypeChanges(oldMethod, newMethod);
 		this.changeStatus = evaluateChangeStatus(this.changeStatus);
+
 	}
 
 	private JApiChangeStatus evaluateChangeStatus(JApiChangeStatus changeStatus) {
+
 		if (changeStatus == JApiChangeStatus.UNCHANGED) {
 			if (this.returnType.getChangeStatus() != JApiChangeStatus.UNCHANGED) {
 				changeStatus = JApiChangeStatus.MODIFIED;

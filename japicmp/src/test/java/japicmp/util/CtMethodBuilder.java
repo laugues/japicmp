@@ -17,7 +17,6 @@ public class CtMethodBuilder extends CtBehaviorBuilder {
 	protected String body = "return null;";
 	private String name = DEFAULT_METHOD_NAME;
 	private CtClass returnType;
-	private List<String> annotations = new ArrayList<>();
 
 	public CtMethodBuilder name(String name) {
 		this.name = name;
@@ -80,8 +79,8 @@ public class CtMethodBuilder extends CtBehaviorBuilder {
 		return (CtMethodBuilder) super.finalMethod();
 	}
 
-	public CtMethodBuilder withAnnotation(String annotation) {
-		this.annotations.add(annotation);
+	public CtMethodBuilder withAnnotation(CtAnnotation ctAnnotation) {
+		this.annotations.add(ctAnnotation);
 		return this;
 	}
 
@@ -92,14 +91,16 @@ public class CtMethodBuilder extends CtBehaviorBuilder {
 		CtMethod ctMethod = CtNewMethod.make(this.modifier, this.returnType, this.name, this.parameters, this.exceptions, this.body, declaringClass);
 		ctMethod.setModifiers(this.modifier);
 		declaringClass.addMethod(ctMethod);
-		for (String annotation : annotations) {
-			ClassFile classFile = declaringClass.getClassFile();
-			ConstPool constPool = classFile.getConstPool();
-			AnnotationsAttribute attr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-			Annotation annot = new Annotation(annotation, constPool);
-			attr.setAnnotation(annot);
-			ctMethod.getMethodInfo().addAttribute(attr);
-		}
+
+		ClassFile classFile = declaringClass.getClassFile();
+		ConstPool constPool = classFile.getConstPool();
+		AnnotationsAttribute attr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+		List<Annotation> annotationsToSet = new ArrayList<>();
+		buildAnnotations(classFile, constPool, annotationsToSet);
+		Annotation[] array = annotationsToSet.toArray(new Annotation[annotationsToSet.size()]);
+		attr.setAnnotations(array);
+		ctMethod.getMethodInfo().addAttribute(attr);
+
 		return ctMethod;
 	}
 

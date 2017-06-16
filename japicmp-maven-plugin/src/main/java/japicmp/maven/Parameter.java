@@ -52,6 +52,8 @@ public class Parameter {
 	private List<String> excludeModules;
 	@org.apache.maven.plugins.annotations.Parameter(required = false, defaultValue = "false")
 	private boolean breakBuildBasedOnSemanticVersioningForMajorVersionZero;
+	@org.apache.maven.plugins.annotations.Parameter(required = false, defaultValue = "true")
+	private boolean activateRestCompatibility = true;
 
 	public String getNoAnnotations() {
 		return noAnnotations;
@@ -291,5 +293,13 @@ public class Parameter {
 
 	public void setBreakBuildBasedOnSemanticVersioningForMajorVersionZero(boolean breakBuildBasedOnSemanticVersioningForMajorVersionZero) {
 		this.breakBuildBasedOnSemanticVersioningForMajorVersionZero = breakBuildBasedOnSemanticVersioningForMajorVersionZero;
+	}
+
+	public boolean isActivateRestCompatibility() {
+		return activateRestCompatibility;
+	}
+
+	public void setActivateRestCompatibility(boolean activateRestCompatibility) {
+		this.activateRestCompatibility = activateRestCompatibility;
 	}
 }

@@ -25,6 +25,7 @@ public class JarArchiveComparatorOptions {
 	private List<String> oldClassPath = new LinkedList<>();
 	private List<String> newClassPath = new LinkedList<>();
 	private boolean noAnnotations = false;
+	private boolean activateRestCompatibility = false;
 
 	/**
 	 * When both versions of the archives under comparison use the exact same classpath
@@ -46,6 +47,7 @@ public class JarArchiveComparatorOptions {
 		toJarArchiveComparatorClassPath(options.getOldClassPath(), comparatorOptions.getOldClassPath());
 		toJarArchiveComparatorClassPath(options.getNewClassPath(), comparatorOptions.getNewClassPath());
 		comparatorOptions.setNoAnnotations(options.isNoAnnotations());
+		comparatorOptions.setActivateRestCompatibility(options.isActivateRestCompatibility());
 		return comparatorOptions;
 	}
 
@@ -131,5 +133,14 @@ public class JarArchiveComparatorOptions {
 
 	public IgnoreMissingClasses getIgnoreMissingClasses() {
 		return ignoreMissingClasses;
+	}
+
+	public boolean isActivateRestCompatibility() {
+		return activateRestCompatibility;
+	}
+
+	public JarArchiveComparatorOptions setActivateRestCompatibility(boolean activateRestCompatibility) {
+		this.activateRestCompatibility = activateRestCompatibility;
+		return this;
 	}
 }

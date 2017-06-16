@@ -430,7 +430,7 @@ public class JApiCmpMojo extends AbstractMojo {
 	}
 
 	void breakBuildIfNecessaryByApplyingFilter(List<JApiClass> jApiClasses, Parameter parameterParam, final Options options,
-									   final JarArchiveComparator jarArchiveComparator) throws MojoFailureException {
+											   final JarArchiveComparator jarArchiveComparator) throws MojoFailureException {
 		final StringBuilder sb = new StringBuilder();
 		final BreakBuildResult breakBuildResult = new BreakBuildResult(breakBuildOnBinaryIncompatibleModifications(parameterParam),
 			breakBuildOnSourceIncompatibleModifications(parameterParam));
@@ -737,6 +737,9 @@ public class JApiCmpMojo extends AbstractMojo {
 				options.setNoAnnotations(noAnnotations);
 			}
 			options.setReportOnlyFilename(parameterParam.isReportOnlyFilename());
+
+			//Activiate rest compatibility check
+			options.setActivateRestCompatibility(parameterParam.isActivateRestCompatibility());
 		}
 		return options;
 	}
@@ -836,7 +839,7 @@ public class JApiCmpMojo extends AbstractMojo {
 		xmlOutputGeneratorOptions.setSemanticVersioningInformation(semverOut.generate());
 		if (pluginParameters.getParameterParam() != null) {
 			String optionalTitle = pluginParameters.getParameterParam().getHtmlTitle();
-			xmlOutputGeneratorOptions.setTitle(optionalTitle!=null ?optionalTitle :options.getDifferenceDescription());
+			xmlOutputGeneratorOptions.setTitle(optionalTitle != null ? optionalTitle : options.getDifferenceDescription());
 		}
 		XmlOutputGenerator xmlGenerator = new XmlOutputGenerator(jApiClasses, options, xmlOutputGeneratorOptions);
 		return xmlGenerator.generate();
@@ -1005,7 +1008,7 @@ public class JApiCmpMojo extends AbstractMojo {
 	}
 
 	private List<JApiCmpArchive> resolveDependencyToFile(String parameterName, Dependency dependency, MavenParameters mavenParameters,
-			boolean transitively, PluginParameters pluginParameters, ConfigurationVersion configurationVersion) throws MojoFailureException {
+														 boolean transitively, PluginParameters pluginParameters, ConfigurationVersion configurationVersion) throws MojoFailureException {
 		List<JApiCmpArchive> jApiCmpArchives = new ArrayList<>();
 		if (getLog().isDebugEnabled()) {
 			getLog().debug("Trying to resolve dependency '" + dependency + "' to file.");

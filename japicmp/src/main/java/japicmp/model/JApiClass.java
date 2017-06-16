@@ -554,6 +554,16 @@ public class JApiClass implements JApiHasModifiers, JApiHasChangeStatus, JApiHas
 					changeCausedByClassElement = true;
 				}
 			}
+
+			if (jarArchiveComparator.getJarArchiveComparatorOptions().isActivateRestCompatibility()) {
+				for (JApiAnnotation annotation : annotations) {
+					if (annotation.getChangeStatus() != JApiChangeStatus.UNCHANGED) {
+						changeStatus = JApiChangeStatus.MODIFIED;
+						changeCausedByClassElement = true;
+					}
+				}
+
+			}
 		}
 		return changeStatus;
 	}
@@ -758,6 +768,14 @@ public class JApiClass implements JApiHasModifiers, JApiHasChangeStatus, JApiHas
 			}
 		}
 		if (binaryCompatible) {
+			for (JApiAnnotation annotation : annotations) {
+				if (!annotation.isBinaryCompatible()) {
+					binaryCompatible = false;
+					break;
+				}
+			}
+		}
+		if (binaryCompatible) {
 			for (JApiField field : fields) {
 				if (!field.isBinaryCompatible()) {
 					binaryCompatible = false;
@@ -814,6 +832,15 @@ public class JApiClass implements JApiHasModifiers, JApiHasChangeStatus, JApiHas
 				break;
 			}
 		}
+		if (sourceCompatible) {
+			for (JApiAnnotation annotation : annotations) {
+				if (!annotation.isSourceCompatible()) {
+					sourceCompatible = false;
+					break;
+				}
+			}
+		}
+
 		if (sourceCompatible) {
 			for (JApiField field : fields) {
 				if (!field.isSourceCompatible()) {

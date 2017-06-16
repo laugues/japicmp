@@ -3,7 +3,7 @@ package japicmp.util;
 import javassist.CtClass;
 import javassist.Modifier;
 
-public abstract class CtBehaviorBuilder {
+public abstract class CtBehaviorBuilder extends AbstractCtBuilder {
 	protected int modifier = 0;
 	protected CtClass[] parameters = new CtClass[]{};
 	protected CtClass[] exceptions = new CtClass[]{};
