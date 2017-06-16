@@ -12,11 +12,11 @@ import javassist.bytecode.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CtClassBuilder {
+public class CtClassBuilder extends AbstractCtBuilder {
 	public static final String DEFAULT_CLASS_NAME = "japicmp.Test";
 	private String name = DEFAULT_CLASS_NAME;
 	private int modifier = Modifier.PUBLIC;
-	private List<String> annotations = new ArrayList<>();
+
 	private Optional<CtClass> superclass = Optional.absent();
 	private List<CtClass> interfaces = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class CtClassBuilder {
 		return this;
 	}
 
-	public CtClassBuilder withAnnotation(String annotation) {
+	public CtClassBuilder withAnnotation(CtAnnotation annotation) {
 		this.annotations.add(annotation);
 		return this;
 	}
@@ -70,19 +70,21 @@ public class CtClassBuilder {
 			ctClass = classPool.makeClass(this.name);
 		}
 		ctClass.setModifiers(this.modifier);
-		for (String annotation : annotations) {
-			ClassFile classFile = ctClass.getClassFile();
-			ConstPool constPool = classFile.getConstPool();
-			AnnotationsAttribute attr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
-			Annotation annot = new Annotation(annotation, constPool);
-			attr.setAnnotation(annot);
-			ctClass.getClassFile2().addAttribute(attr);
-		}
+		ClassFile classFile = ctClass.getClassFile();
+		ConstPool constPool = classFile.getConstPool();
+		AnnotationsAttribute attr = new AnnotationsAttribute(constPool, AnnotationsAttribute.visibleTag);
+		List<Annotation> annotationsToSet = new ArrayList<>();
+		buildAnnotations(classFile, constPool, annotationsToSet);
+		Annotation[] array = annotationsToSet.toArray(new Annotation[annotationsToSet.size()]);
+		attr.setAnnotations(array);
+		ctClass.getClassFile2().addAttribute(attr);
+
 		for (CtClass interfaceCtClass : interfaces) {
 			ctClass.addInterface(interfaceCtClass);
 		}
 		return ctClass;
 	}
+
 
 	public static CtClassBuilder create() {
 		return new CtClassBuilder();

@@ -39,6 +39,7 @@ public class Options {
 	private JApiCli.ClassPathMode classPathMode = JApiCli.ClassPathMode.ONE_COMMON_CLASSPATH;
 	private boolean noAnnotations = false;
 	private boolean reportOnlyFilename;
+	private boolean activateRestCompatibility;
 
 	Options() {
 		// intentionally left empty
@@ -279,6 +280,15 @@ public class Options {
 		} catch (Exception e) {
 			throw new JApiCmpException(JApiCmpException.Reason.IllegalArgument, "Could not compile provided regular expression: " + e.getMessage(), e);
 		}
+	}
+
+	public boolean isActivateRestCompatibility() {
+		return activateRestCompatibility;
+	}
+
+	public Options setActivateRestCompatibility(boolean activateRestCompatibility) {
+		this.activateRestCompatibility = activateRestCompatibility;
+		return this;
 	}
 
 	public IgnoreMissingClasses getIgnoreMissingClasses() {

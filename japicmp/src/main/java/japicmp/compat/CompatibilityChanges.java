@@ -5,20 +5,19 @@ import japicmp.cmp.JarArchiveComparator;
 import japicmp.cmp.JarArchiveComparatorOptions;
 import japicmp.exception.JApiCmpException;
 import japicmp.model.*;
+import japicmp.util.AnnotationHelper;
 import japicmp.util.ClassHelper;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.NotFoundException;
 
 import java.util.*;
-import java.util.logging.Logger;
 
-import static japicmp.util.ModifierHelper.hasModifierLevelDecreased;
-import static japicmp.util.ModifierHelper.isNotPrivate;
-import static japicmp.util.ModifierHelper.isSynthetic;
+import static japicmp.util.ModifierHelper.*;
 
 public class CompatibilityChanges {
 	private final JarArchiveComparator jarArchiveComparator;
+
 
 	public CompatibilityChanges(JarArchiveComparator jarArchiveComparator) {
 		this.jarArchiveComparator = jarArchiveComparator;
@@ -58,6 +57,9 @@ public class CompatibilityChanges {
 		}
 		// section 13.4.4 of "Java Language Specification" SE7
 		checkIfSuperclassesOrInterfacesChangedIncompatible(jApiClass, classMap);
+		if (jarArchiveComparator.getJarArchiveComparatorOptions().isActivateRestCompatibility()) {
+			checkIfAnnotationsHaveChangedIncompatible(jApiClass);
+		}
 		checkIfMethodsHaveChangedIncompatible(jApiClass, classMap);
 		checkIfConstructorsHaveChangedIncompatible(jApiClass, classMap);
 		checkIfFieldsHaveChangedIncompatible(jApiClass, classMap);
@@ -266,6 +268,51 @@ public class CompatibilityChanges {
 				addCompatibilityChange(constructor, JApiCompatibilityChange.CONSTRUCTOR_LESS_ACCESSIBLE);
 			}
 		}
+	}
+
+	/**
+	 * Check if provided class has annotations which has a status changed
+	 *
+	 * @param jApiClass the {@link JApiClass} to process
+	 */
+	private void checkIfAnnotationsHaveChangedIncompatible(JApiClass jApiClass) {
+
+		for (final JApiAnnotation annotationClass : jApiClass.getAnnotations()) {
+			addCompatibilitiesForAnnotation(annotationClass);
+
+
+			for (JApiMethod method : jApiClass.getMethods()) {
+				for (JApiAnnotation annotationMethod : method.getAnnotations()) {
+					addCompatibilitiesForAnnotation(annotationMethod);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add compatibilities for an {@link JApiAnnotation}
+	 *
+	 * @param jApiAnnotation
+	 */
+	private void addCompatibilitiesForAnnotation(JApiAnnotation jApiAnnotation) {
+		if (AnnotationHelper.isRestAnnotation(jApiAnnotation)) {
+			JApiCompatibilityChange jApiCompatibilityChange = AnnotationHelper.getJApiCompatibilityChange(jApiAnnotation);
+			if (jApiCompatibilityChange != null) {
+				addCompatibilityChange(jApiAnnotation, jApiCompatibilityChange);
+			}
+		} else {
+			if (jApiAnnotation.getChangeStatus() == JApiChangeStatus.MODIFIED) {
+				addCompatibilityChange(jApiAnnotation, JApiCompatibilityChange.ANNOTATION_MODIFIED);
+			}
+			if (jApiAnnotation.getChangeStatus() == JApiChangeStatus.NEW) {
+				addCompatibilityChange(jApiAnnotation, JApiCompatibilityChange.ANNOTATION_ADDED);
+			}
+			if (jApiAnnotation.getChangeStatus() == JApiChangeStatus.REMOVED) {
+				addCompatibilityChange(jApiAnnotation, JApiCompatibilityChange.ANNOTATION_REMOVED);
+			}
+
+		}
+
 	}
 
 	private void checkIfMethodsHaveChangedIncompatible(JApiClass jApiClass, Map<String, JApiClass> classMap) {

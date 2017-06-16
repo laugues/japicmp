@@ -174,6 +174,13 @@ public class JApiBehavior implements JApiHasModifiers, JApiHasChangeStatus, JApi
 					changeStatus = JApiChangeStatus.MODIFIED;
 				}
 			}
+			if (jarArchiveComparator.getJarArchiveComparatorOptions().isActivateRestCompatibility()) {
+				for (JApiAnnotation annotation : annotations) {
+					if (annotation.getChangeStatus() != JApiChangeStatus.UNCHANGED) {
+						changeStatus = JApiChangeStatus.MODIFIED;
+					}
+				}
+			}
 		}
 		return changeStatus;
 	}
@@ -393,6 +400,15 @@ public class JApiBehavior implements JApiHasModifiers, JApiHasChangeStatus, JApi
 		for (JApiCompatibilityChange compatibilityChange : compatibilityChanges) {
 			if (!compatibilityChange.isBinaryCompatible()) {
 				binaryCompatible = false;
+			}
+		}
+
+		if (binaryCompatible) {
+			for (JApiAnnotation annotation : annotations) {
+				if (!annotation.isBinaryCompatible()) {
+					binaryCompatible = false;
+					break;
+				}
 			}
 		}
 		return binaryCompatible;

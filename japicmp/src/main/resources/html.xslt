@@ -387,6 +387,7 @@
 							<td>Status:</td>
 							<td>Fully Qualified Name:</td>
 							<td>Elements:</td>
+							<td>Compatibility Changes:</td>
 						</tr>
 					</thead>
 					<tbody>
@@ -597,6 +598,27 @@
 					</table>
 				</xsl:if>
 				<xsl:if test="count(elements/element) = 0">n.a.</xsl:if>
+			</td>
+			<td>
+				<xsl:if test="count(compatibilityChanges/compatibilityChange) > 0">
+					<div class="class_compatibilityChanges">
+						<span class="label_class_member">Compatibility Changes:</span>
+						<table>
+							<thead>
+								<tr>
+									<td>Change</td>
+								</tr>
+							</thead>
+							<tbody>
+								<xsl:for-each select="compatibilityChanges/compatibilityChange">
+									<tr>
+										<td><xsl:value-of select="text()"/></td>
+									</tr>
+								</xsl:for-each>
+							</tbody>
+						</table>
+					</div>
+				</xsl:if>
 			</td>
 		</tr>
 	</xsl:template>

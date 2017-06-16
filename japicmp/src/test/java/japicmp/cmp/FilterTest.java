@@ -5,6 +5,7 @@ import japicmp.model.JApiChangeStatus;
 import japicmp.model.JApiClass;
 import japicmp.model.JApiField;
 import japicmp.model.JApiMethod;
+import japicmp.util.CtAnnotation;
 import japicmp.util.CtClassBuilder;
 import japicmp.util.CtFieldBuilder;
 import japicmp.util.CtMethodBuilder;
@@ -371,16 +372,17 @@ public class FilterTest {
 		JarArchiveComparatorOptions options = new JarArchiveComparatorOptions();
 		options.getFilters().getExcludes().add(new AnnotationClassFilter("@" + Exclude.class.getName()));
 		List<JApiClass> jApiClasses = ClassesHelper.compareClasses(options, new ClassesHelper.ClassesGenerator() {
+			private CtAnnotation ctAnnotation = new CtAnnotation().setName(Exclude.class.getName());
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Exclude.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}
 
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Exclude.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}
@@ -397,7 +399,8 @@ public class FilterTest {
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
 				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").addToClassPool(classPool);
-				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(Exclude.class.getName()).addToClass(ctClass1);
+				CtAnnotation ctAnnotation1 = new CtAnnotation().setName(Exclude.class.getName());
+				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(ctAnnotation1).addToClass(ctClass1);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("knowItAll").addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("askSheldon").addToClass(ctClass2);
@@ -407,7 +410,8 @@ public class FilterTest {
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
 				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").addToClassPool(classPool);
-				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(Exclude.class.getName()).addToClass(ctClass1);
+				CtAnnotation ctAnnotation1 = new CtAnnotation().setName(Exclude.class.getName());
+				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(ctAnnotation1).addToClass(ctClass1);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("knowItAll").addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("askSheldon").addToClass(ctClass2);
@@ -459,16 +463,19 @@ public class FilterTest {
 		JarArchiveComparatorOptions options = new JarArchiveComparatorOptions();
 		options.getFilters().getIncludes().add(new AnnotationClassFilter("@" + Include.class.getName()));
 		List<JApiClass> jApiClasses = ClassesHelper.compareClasses(options, new ClassesHelper.ClassesGenerator() {
+
+			private CtAnnotation ctAnnotation = new CtAnnotation().setName(Include.class.getName());
+
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}
 
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}
@@ -485,7 +492,9 @@ public class FilterTest {
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
 				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").addToClassPool(classPool);
-				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(Include.class.getName()).addToClass(ctClass1);
+				CtAnnotation ctAnnotation1 = new CtAnnotation().setName(Include.class.getName());
+
+				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(ctAnnotation1).addToClass(ctClass1);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("knowItAll").addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("askSheldon").addToClass(ctClass2);
@@ -495,7 +504,9 @@ public class FilterTest {
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
 				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").addToClassPool(classPool);
-				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(Include.class.getName()).addToClass(ctClass1);
+				CtAnnotation ctAnnotation1 = new CtAnnotation().setName(Include.class.getName());
+
+				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("study").withAnnotation(ctAnnotation1).addToClass(ctClass1);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("knowItAll").addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				CtMethodBuilder.create().publicAccess().returnType(CtClass.voidType).name("askSheldon").addToClass(ctClass2);
@@ -541,16 +552,17 @@ public class FilterTest {
 		JarArchiveComparatorOptions options = new JarArchiveComparatorOptions();
 		options.getFilters().getIncludes().add(new AnnotationClassFilter("@" + Include.class.getName()));
 		List<JApiClass> jApiClasses = ClassesHelper.compareClasses(options, new ClassesHelper.ClassesGenerator() {
+			private CtAnnotation ctAnnotation = new CtAnnotation().setName(Include.class.getName());
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}
 
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtMethodBuilder.create().publicAccess().returnType(classPool.getCtClass(String.class.getName())).name("getName").addToClass(ctClass1);
 				CtFieldBuilder.create().type(classPool.getCtClass(Integer.class.getName())).name("age").addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
@@ -571,9 +583,12 @@ public class FilterTest {
 		options.getFilters().getIncludes().add(new AnnotationClassFilter("@" + Include.class.getName()));
 		options.getFilters().getExcludes().add(new AnnotationBehaviorFilter("@" + Exclude.class.getName()));
 		List<JApiClass> jApiClasses = ClassesHelper.compareClasses(options, new ClassesHelper.ClassesGenerator() {
+
+			private CtAnnotation ctAnnotation = new CtAnnotation().setName(Include.class.getName());
+
 			@Override
 			public List<CtClass> createOldClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtFieldBuilder.create().name("age").type(classPool.getCtClass(String.class.getName())).addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
@@ -581,9 +596,10 @@ public class FilterTest {
 
 			@Override
 			public List<CtClass> createNewClasses(ClassPool classPool) throws Exception {
-				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(Include.class.getName()).addToClassPool(classPool);
+				CtClass ctClass1 = CtClassBuilder.create().name("big.bang.theory.Sheldon").withAnnotation(ctAnnotation).addToClassPool(classPool);
 				CtFieldBuilder.create().name("age").type(classPool.getCtClass(String.class.getName())).withAnnotation(Include.class.getName()).addToClass(ctClass1);
-				CtMethodBuilder.create().publicAccess().returnType(classPool.getCtClass(String.class.getName())).name("getName").withAnnotation(Exclude.class.getName()).addToClass(ctClass1);
+				CtAnnotation ctAnnotation1 = new CtAnnotation().setName(Exclude.class.getName());
+				CtMethodBuilder.create().publicAccess().returnType(classPool.getCtClass(String.class.getName())).name("getName").withAnnotation(ctAnnotation1).addToClass(ctClass1);
 				CtClass ctClass2 = CtClassBuilder.create().name("big.bang.theory.Leonard").addToClassPool(classPool);
 				return Arrays.asList(ctClass1, ctClass2);
 			}

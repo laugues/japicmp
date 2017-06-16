@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.github.siom79.japicmp</groupId>
 		<artifactId>japicmp-base</artifactId>
-		<version>0.10.0</version>
+		<version>0.11.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -96,6 +96,21 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.11</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.20.0-GA</version>
+		</dependency>
+		<dependency>
 			<groupId>org.codehaus.groovy</groupId>
 			<artifactId>groovy-jsr223</artifactId>
 			<version>2.4.6</version>
@@ -144,6 +159,14 @@
 						</goals>
 						<configuration>
 							<artifactItems>
+								<artifactItem>
+									<groupId>com.google.guava</groupId>
+									<artifactId>guava</artifactId>
+									<version>20.0</version>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<destFileName>guava-20.0.jar</destFileName>
+								</artifactItem>
 								<artifactItem>
 									<groupId>com.google.guava</groupId>
 									<artifactId>guava</artifactId>
